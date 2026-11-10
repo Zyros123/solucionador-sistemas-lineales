@@ -1,0 +1,16 @@
+COMPARACIÓN DE LOS CUATRO MÉTODOS
+
+Sistema 4x4: compatible determinado (solución única)   (det(A) = 48)
+
+Método           Estado          × y ÷   Tiempo(ms)  Solución
+----------------------------------------------------------------------------------------------------
+Gauss            Única           31      0.462       x1=5, x2=10, x3=8, x4=4
+Gauss-Jordan     Única           51      0.619       x1=5, x2=10, x3=8, x4=4
+Cramer           Única           212     0.951       x1=5, x2=10, x3=8, x4=4
+Matriz inversa   Única           112     1.147       x1=5, x2=10, x3=8, x4=4
+
+✓ Los 4 métodos aplicables coinciden en el resultado (validación cruzada).
+
+Análisis:
+  • Los cuatro métodos son aplicables. Gauss suele requerir menos operaciones; Cramer crece muy rápido con n
+    (calcula n+1 determinantes) y la inversa calcula más de lo necesario si solo se busca x.

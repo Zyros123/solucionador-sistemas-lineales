@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solucionador de Sistemas Lineales 3x3 y 4x4</title>
+<style>
+:root {
+  --bg: #f0f4f8;
+  --fg: #0f172a;
+  --mut: #64748b;
+  --card: #ffffff;
+  --bd: #e2e8f0;
+  --ac: #0d9488;
+  --ac-hover: #0f766e;
+  --acfg: #ffffff;
+  --code: #f1f5f9;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --radius: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --fg: #f1f5f9;
+    --mut: #94a3b8;
+    --card: #1e293b;
+    --bd: #334155;
+    --ac: #2dd4bf;
+    --ac-hover: #5eead4;
+    --acfg: #0f172a;
+    --code: #1e293b;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+header {
+  padding: 56px 24px 40px;
+  max-width: 1040px;
+  margin: auto;
+  text-align: center;
+}
+header .tag {
+  display: inline-block;
+  background: color-mix(in srgb, var(--ac) 12%, transparent);
+  color: var(--ac);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1.2;
+  font-weight: 800;
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+header > p {
+  color: var(--mut);
+  font-size: 17px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+nav {
+  position: sticky;
+  top: 0;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--bd);
+  z-index: 20;
+}
+nav div {
+  max-width: 1040px;
+  margin: auto;
+  padding: 12px 24px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+nav a {
+  color: var(--mut);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+nav a:hover {
+  color: var(--ac);
+  background: color-mix(in srgb, var(--ac) 10%, transparent);
+}
+main {
+  max-width: 1040px;
+  margin: auto;
+  padding: 0 24px 80px;
+}
+section {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--bd);
+}
+section:last-of-type { border-bottom: none; }
+h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-size: 17px;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+p {
+  color: var(--mut);
+  margin: 0 0 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.card p { margin: 0; font-size: 15px; }
+.card pre {
+  margin-top: 14px;
+  font-size: 13px;
+  background: var(--code);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.scroll { overflow-x: auto; border-radius: var(--radius); }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+th, td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bd);
+  font-size: 15px;
+}
+th {
+  background: color-mix(in srgb, var(--ac) 8%, var(--card));
+  color: var(--mut);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: color-mix(in srgb, var(--ac) 4%, transparent); }
+code, pre {
+  font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+}
+pre {
+  background: var(--code);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 16px;
+  overflow: auto;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--fg);
+}
+.panel {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-top: 16px;
+}
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 14px;
+}
+label {
+  color: var(--mut);
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+select, input, button {
+  font: inherit;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--fg);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--ac);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ac) 25%, transparent);
+}
+input.c {
+  width: 72px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+button {
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s, transform 0.1s;
+}
+button:hover { transform: translateY(-1px); }
+button:active { transform: translateY(0); }
+button.p {
+  background: var(--ac);
+  color: var(--acfg);
+  border-color: var(--ac);
+  font-weight: 600;
+}
+button.p:hover { background: var(--ac-hover); }
+#rej {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 18px;
+  align-items: center;
+  justify-items: start;
+}
+#estado {
+  color: var(--mut);
+  font-size: 13.5px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#estado.ready::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: inline-block;
+}
+#desc {
+  font-size: 14.5px;
+  color: var(--ac);
+  margin: 8px 0 12px;
+  line-height: 1.5;
+}
+#salida {
+  min-height: 140px;
+  margin-top: 14px;
+  background: var(--code);
+  border-radius: 10px;
+  font-size: 13.5px;
+}
+details {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s;
+}
+details[open] { border-color: var(--ac); }
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before {
+  content: "▸";
+  color: var(--ac);
+  font-size: 12px;
+  transition: transform 0.15s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details pre {
+  margin-top: 12px;
+  border: none;
+  background: var(--code);
+}
+a.btn {
+  display: inline-block;
+  background: var(--ac);
+  color: var(--acfg);
+  padding: 10px 18px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 4px 8px 4px 0;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: var(--shadow);
+}
+a.btn:hover {
+  background: var(--ac-hover);
+  transform: translateY(-1px);
+}
+.badge {
+  display: inline-block;
+  background: color-mix(in srgb, var(--ac) 15%, transparent);
+  color: var(--ac);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+footer {
+  max-width: 1040px;
+  margin: auto;
+  padding: 32px 24px 48px;
+  color: var(--mut);
+  font-size: 14px;
+  text-align: center;
+  border-top: 1px solid var(--bd);
+}
+footer strong { color: var(--fg); }
+@media (max-width: 600px) {
+  header { padding: 40px 16px 28px; }
+  main { padding: 0 16px 60px; }
+  .row { gap: 8px; }
+  input.c { width: 60px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">ÁLGEBRA LINEAL · CECAR · PROYECTO ABP · 2026-2</div>
+  <h1>Solucionador de sistemas lineales 3×3 y 4×4</h1>
+  <p>Gauss, Gauss-Jordan, Regla de Cramer y Matriz inversa, con solución paso a paso. Equipo mixto de Ingeniería Industrial e Ingeniería de Sistemas.</p>
+</header>
+
+<nav>
+  <div>
+    <a href="#resumen">Resumen</a>
+    <a href="#casos">Casos</a>
+    <a href="#metodos">Métodos</a>
+    <a href="#programa">Probar el programa</a>
+    <a href="#comparacion">Comparación</a>
+    <a href="#ejemplos">Ejemplos</a>
+    <a href="#descargas">Código</a>
+  </div>
+</nav>
+
+<main>
+<section id="resumen">
+  <h2>Resumen</h2>
+  <p>El programa construye un sistema de ecuaciones lineales a partir de un caso real, lo verifica y lo resuelve por el método que el usuario elija. Usa fracciones exactas (sin errores de redondeo), valida las entradas, clasifica el sistema (solución única, infinitas soluciones o sin solución) y comprueba la solución por sustitución.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Construir y validar</h3>
+      <p>Sistemas 3×3 o 4×4 con enteros, decimales o fracciones. Avisa de campos vacíos, texto no numérico y determinante cero.</p>
+    </div>
+    <div class="card">
+      <h3>Resolver paso a paso</h3>
+      <p>Cada operación por filas, cada determinante y cada producto de la inversa quedan documentados.</p>
+    </div>
+    <div class="card">
+      <h3>Verificar y comparar</h3>
+      <p>Sustitución en las ecuaciones y comparación de los cuatro métodos en operaciones y tiempo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="casos">
+  <h2>Casos de estudio</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Industrial · Planta de muebles <span class="badge">3×3</span></h3>
+      <p>Sillas (x₁), mesas (x₂) y escritorios (x₃) consumen horas de corte, ensamblaje y acabado. ¿Cuánto producir para usar exactamente las horas disponibles?</p>
+      <pre>2x₁ + 3x₂ + 4x₃ = 140
+ x₁ + 2x₂ +  x₃ =  65
+3x₁ +  x₂ + 2x₃ =  80</pre>
+    </div>
+    <div class="card">
+      <h3>Sistemas · Clúster de servidores <span class="badge">4×4</span></h3>
+      <p>Consultas SQL, transacciones web, reportes batch y respaldos consumen CPU, RAM, disco y red. ¿Qué carga agota exactamente la capacidad?</p>
+      <pre>2x₁ +  x₂ +  x₃       = 28
+ x₁ + 3x₂ + 2x₃ +  x₄ = 55
+       x₂ + 4x₃ + 2x₄ = 50
+ x₁       +  x₃ + 3x₄ = 25</pre>
+    </div>
+  </div>
+</section>
+
+<section id="metodos">
+  <h2>Métodos</h2>
+  <div class="scroll">
+    <table>
+      <tr><th>Método</th><th>Idea</th><th>Condición</th></tr>
+      <tr><td><b>Gauss</b></td><td>Escalonar la matriz aumentada y sustituir hacia atrás</td><td>Sirve siempre</td></tr>
+      <tr><td><b>Gauss-Jordan</b></td><td>Reducir hasta la identidad; la solución se lee directa</td><td>Sirve siempre</td></tr>
+      <tr><td><b>Regla de Cramer</b></td><td>x<sub>i</sub> = det(A<sub>i</sub>) / det(A)</td><td>Solo si det(A) ≠ 0</td></tr>
+      <tr><td><b>Matriz inversa</b></td><td>x = A⁻¹·b, con A⁻¹ por Gauss-Jordan sobre [A | I]</td><td>Solo si det(A) ≠ 0</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="programa">
+  <h2>Probar el programa</h2>
+  <p>Este es el mismo motor en Python del repositorio (<code>motor.py</code>), ejecutado en tu navegador con Pyodide. Necesita conexión a internet la primera vez.</p>
+
+  <div class="panel">
+    <div class="row">
+      <label>Tamaño
+        <select id="n"><option>3</option><option>4</option></select>
+      </label>
+      <label>Caso
+        <select id="caso"><option value="">— elegir un caso —</option></select>
+      </label>
+      <button id="cargar">Cargar caso</button>
+    </div>
+    <div id="desc"></div>
+    <div id="rej"></div>
+    <div class="row">
+      <label>Método
+        <select id="metodo">
+          <option>Gauss</option>
+          <option>Gauss-Jordan</option>
+          <option>Regla de Cramer</option>
+          <option>Matriz inversa</option>
+          <option>Comparar los 4 métodos</option>
+        </select>
+      </label>
+      <button id="ver">Verificar sistema</button>
+      <button id="res" class="p">Resolver paso a paso</button>
+      <button id="lim">Limpiar</button>
+    </div>
+    <div id="estado">Cargando el motor de Python…</div>
+    <pre id="salida">El resultado aparecerá aquí.</pre>
+  </div>
+</section>
+
+<section id="comparacion">
+  <h2>Comparación de métodos</h2>
+  <p>Multiplicaciones y divisiones contadas por el programa.</p>
+  <div class="scroll">
+    <table>
+      <tr><th>Método</th><th>3×3</th><th>4×4</th><th>Aplica si det(A) = 0</th></tr>
+      <tr><td>Gauss</td><td>17</td><td>31</td><td>Sí</td></tr>
+      <tr><td>Gauss-Jordan</td><td>27</td><td>51</td><td>Sí</td></tr>
+      <tr><td>Matriz inversa</td><td>54</td><td>112</td><td>No</td></tr>
+      <tr><td>Regla de Cramer</td><td>51</td><td>212</td><td>No</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="ejemplos">
+  <h2>Ejemplos de salida</h2>
+  <details data-f="ejemplos/caso1_industrial_gauss.txt"><summary>Caso industrial · Gauss</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/caso1_industrial_gauss_jordan.txt"><summary>Caso industrial · Gauss-Jordan</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/caso1_industrial_cramer.txt"><summary>Caso industrial · Regla de Cramer</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/caso1_industrial_inversa.txt"><summary>Caso industrial · Matriz inversa</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/caso2_sistemas_comparacion.txt"><summary>Caso de sistemas 4×4 · Comparación de los cuatro métodos</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/demo_infinitas_soluciones_gauss_jordan.txt"><summary>Demostración · Infinitas soluciones</summary><pre>Cargando…</pre></details>
+  <details data-f="ejemplos/demo_inconsistente_gauss.txt"><summary>Demostración · Sistema inconsistente</summary><pre>Cargando…</pre></details>
+</section>
+
+<section id="descargas">
+  <h2>Código y documentos</h2>
+  <p>Código fuente en este repositorio: <code>motor.py</code> (motor matemático), <code>programa.py</code> (interfaz Tkinter y consola) y <code>pruebas.py</code> (2.408 comprobaciones automáticas).</p>
+  <a class="btn" href="motor.py">motor.py</a>
+  <a class="btn" href="programa.py">programa.py</a>
+  <a class="btn" href="pruebas.py">pruebas.py</a>
+  <p style="margin-top:18px">Documentos del proyecto: <a href="docs/informe.pdf" style="color:var(--ac);font-weight:600">Informe (PDF)</a> · <a href="docs/diapositivas.pdf" style="color:var(--ac);font-weight:600">Diapositivas (PDF)</a>. Exporta ambos y colócalos en la carpeta <code>docs/</code> para que estos enlaces funcionen.</p>
+</section>
+</main>
+
+<footer>
+  <strong>Álgebra Lineal · CECAR</strong> · Periodo 2026-2<br>
+  Docente: Javier Andrés Castro Rodríguez<br>
+  <span style="opacity:0.7">[Nombres de los integrantes del equipo]</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let casos={}, runPy=null, casoActual="";
+
+const GLUE=`
+import json, motor, programa
+def web_casos():
+    return json.dumps({k:{"A":v["A"],"b":v["b"],"descripcion":v["descripcion"]} for k,v in programa.CASOS.items()})
+def web_run(filas_json, metodo, caso_key, verificar):
+    try:
+        A,b=motor.validar_entradas(json.loads(filas_json))
+    except motor.ErrorSistema as e:
+        return "DATOS INVALIDOS\\n" + str(e)
+    if verificar:
+        return motor.verificacion_previa(A,b)
+    caso=programa.CASOS.get(caso_key) if caso_key else None
+    return programa.ejecutar(metodo,A,b,caso)
+`;
+
+function rejilla(){
+  const n=+$("n").value, r=$("rej");
+  r.style.gridTemplateColumns=`repeat(${n+2}, auto)`;
+  r.innerHTML="";
+  for(let j=0;j<n;j++){
+    const l=document.createElement("span");
+    l.textContent="x"+(j+1);
+    l.style.textAlign="center";
+    l.style.fontWeight="600";
+    l.style.color="var(--mut)";
+    l.style.fontSize="13px";
+    r.appendChild(l);
+  }
+  r.appendChild(document.createElement("span"));
+  const lb=document.createElement("label");
+  lb.textContent="b";
+  lb.style.textAlign="center";
+  lb.style.fontWeight="600";
+  r.appendChild(lb);
+  for(let i=0;i<n;i++){
+    for(let j=0;j<=n;j++){
+      if(j===n){
+        const e=document.createElement("span");
+        e.textContent="=";
+        e.style.textAlign="center";
+        e.style.fontWeight="600";
+        r.appendChild(e);
+      }
+      const inp=document.createElement("input");
+      inp.className="c";
+      inp.id=`c${i}_${j}`;
+      inp.autocomplete="off";
+      inp.addEventListener("input",()=>{casoActual="";$("desc").textContent="";});
+      r.appendChild(inp);
+    }
+  }
+}
+function leer(){
+  const n=+$("n").value, f=[];
+  for(let i=0;i<n;i++){
+    const fila=[];
+    for(let j=0;j<=n;j++) fila.push($(`c${i}_${j}`).value);
+    f.push(fila);
+  }
+  return JSON.stringify(f);
+}
+function ejecutar(ver){
+  if(!runPy){$("estado").textContent="El motor aún se está cargando…";return;}
+  $("salida").textContent=runPy(leer(),$("metodo").value,casoActual,ver);
+}
+$("n").onchange=rejilla;
+$("cargar").onclick=()=>{
+  const k=$("caso").value;
+  if(!k||!casos[k])return;
+  const c=casos[k];
+  $("n").value=String(c.A.length);
+  rejilla();
+  c.A.forEach((f,i)=>f.concat([c.b[i]]).forEach((v,j)=>$(`c${i}_${j}`).value=v));
+  casoActual=k;
+  $("desc").textContent=c.descripcion;
+};
+$("ver").onclick=()=>ejecutar(true);
+$("res").onclick=()=>ejecutar(false);
+$("lim").onclick=()=>{
+  document.querySelectorAll("#rej input").forEach(i=>i.value="");
+  $("salida").textContent="El resultado aparecerá aquí.";
+  casoActual="";
+  $("desc").textContent="";
+};
+rejilla();
+
+document.querySelectorAll("details[data-f]").forEach(d=>d.addEventListener("toggle",async()=>{
+  if(!d.open||d.dataset.ok)return;
+  try{
+    const t=await (await fetch(d.dataset.f)).text();
+    d.querySelector("pre").textContent=t;
+    d.dataset.ok=1;
+  }catch(e){
+    d.querySelector("pre").textContent="No se pudo cargar el ejemplo.";
+  }
+}));
+
+(async()=>{
+  try{
+    const py=await loadPyodide();
+    for(const f of ["motor.py","programa.py"]){
+      const t=await (await fetch(f)).text();
+      py.FS.writeFile(f,t);
+    }
+    py.runPython(GLUE);
+    casos=JSON.parse(py.globals.get("web_casos")());
+    runPy=(f,m,c,v)=>py.globals.get("web_run")(f,m,c,v);
+    Object.keys(casos).forEach(k=>{
+      const o=document.createElement("option");
+      o.value=k;
+      o.textContent=k;
+      $("caso").appendChild(o);
+    });
+    $("estado").textContent="Motor listo.";
+    $("estado").classList.add("ready");
+  }catch(e){
+    $("estado").textContent="No se pudo iniciar el motor en el navegador. Abre la página desde GitHub Pages (no como archivo local) y revisa tu conexión. Error: "+e;
+  }
+})();
+</script>
+</body>
+</html>

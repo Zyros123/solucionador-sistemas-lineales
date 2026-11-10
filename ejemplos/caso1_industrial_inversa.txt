@@ -1,0 +1,97 @@
+MÉTODO DE LA MATRIZ INVERSA   x = A⁻¹ · b
+
+Sistema:
+  Ec.1:  2·x1 + 3·x2 + 4·x3 = 140
+  Ec.2:  x1 + 2·x2 + x3 = 65
+  Ec.3:  3·x1 + x2 + 2·x3 = 80
+
+Paso 1 · Calcular A⁻¹ aplicando Gauss-Jordan a la matriz ampliada [A | I]
+
+Matriz [A | I]:
+    [ 2 3 4 | 1 0 0 ]
+    [ 1 2 1 | 0 1 0 ]
+    [ 3 1 2 | 0 0 1 ]
+
+F1 ← F1 / 2      (pivote de la columna 1 → 1)
+    [ 1 3/2 2 | 1/2 0 0 ]
+    [ 1   2 1 |   0 1 0 ]
+    [ 3   1 2 |   0 0 1 ]
+
+F2 ← F2 − F1      [m = 1/1 = 1]
+    [ 1 3/2  2 |  1/2 0 0 ]
+    [ 0 1/2 -1 | -1/2 1 0 ]
+    [ 3   1  2 |    0 0 1 ]
+
+F3 ← F3 − 3·F1      [m = 3/1 = 3]
+    [ 1  3/2  2 |  1/2 0 0 ]
+    [ 0  1/2 -1 | -1/2 1 0 ]
+    [ 0 -7/2 -4 | -3/2 0 1 ]
+
+F2 ← F2 / (1/2)      (pivote de la columna 2 → 1)
+    [ 1  3/2  2 |  1/2 0 0 ]
+    [ 0    1 -2 |   -1 2 0 ]
+    [ 0 -7/2 -4 | -3/2 0 1 ]
+
+F1 ← F1 − 3/2·F2      [m = (3/2)/1 = 3/2]
+    [ 1    0  5 |    2 -3 0 ]
+    [ 0    1 -2 |   -1  2 0 ]
+    [ 0 -7/2 -4 | -3/2  0 1 ]
+
+F3 ← F3 + 7/2·F2      [m = (-7/2)/1 = -7/2]
+    [ 1 0   5 |  2 -3 0 ]
+    [ 0 1  -2 | -1  2 0 ]
+    [ 0 0 -11 | -5  7 1 ]
+
+F3 ← F3 / (-11)      (pivote de la columna 3 → 1)
+    [ 1 0  5 |    2    -3     0 ]
+    [ 0 1 -2 |   -1     2     0 ]
+    [ 0 0  1 | 5/11 -7/11 -1/11 ]
+
+F1 ← F1 − 5·F3      [m = 5/1 = 5]
+    [ 1 0  0 | -3/11  2/11  5/11 ]
+    [ 0 1 -2 |    -1     2     0 ]
+    [ 0 0  1 |  5/11 -7/11 -1/11 ]
+
+F2 ← F2 + 2·F3      [m = (-2)/1 = -2]
+    [ 1 0 0 | -3/11  2/11  5/11 ]
+    [ 0 1 0 | -1/11  8/11 -2/11 ]
+    [ 0 0 1 |  5/11 -7/11 -1/11 ]
+
+Matriz final [I | A⁻¹]:
+    [ 1 0 0 | -3/11  2/11  5/11 ]
+    [ 0 1 0 | -1/11  8/11 -2/11 ]
+    [ 0 0 1 |  5/11 -7/11 -1/11 ]
+
+A⁻¹ =
+    [ -3/11  2/11  5/11 ]
+    [ -1/11  8/11 -2/11 ]
+    [  5/11 -7/11 -1/11 ]
+
+(det(A) = -11 ≠ 0, producto de los pivotes con signo por intercambios)
+
+Comprobación A·A⁻¹ = I:  ✓ se obtiene la identidad
+
+Paso 2 · Multiplicar x = A⁻¹ · b
+
+  x1 = (-3/11)·140 + 2/11·65 + 5/11·80 = 10
+  x2 = (-1/11)·140 + 8/11·65 + (-2/11)·80 = 20
+  x3 = 5/11·140 + (-7/11)·65 + (-1/11)·80 = 15
+
+RESULTADO: solución única
+  x1 = 10
+  x2 = 20
+  x3 = 15
+
+VERIFICACIÓN (sustitución en el sistema original):
+  Ec.1: 2·10 + 3·20 + 4·15 = 140   (b = 140)  ✓
+  Ec.2: 1·10 + 2·20 + 1·15 = 65   (b = 65)  ✓
+  Ec.3: 3·10 + 1·20 + 2·15 = 80   (b = 80)  ✓
+  ➜ La solución satisface todas las ecuaciones.
+
+INTERPRETACIÓN EN EL CONTEXTO DEL CASO
+Una planta fabrica sillas (x1), mesas (x2) y escritorios (x3). Cada unidad consume horas en tres estaciones: corte, ensamblaje y acabado. Se desea saber cuántas unidades producir para usar EXACTAMENTE las horas disponibles: 140 h de corte, 65 h de ensamblaje y 80 h de acabado.
+
+  • Sillas: 10 unidades
+  • Mesas: 20 unidades
+  • Escritorios: 15 unidades
+  ➜ Solución factible: todas las cantidades son no negativas.

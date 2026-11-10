@@ -1,0 +1,65 @@
+MÉTODO DE GAUSS-JORDAN  (reducción a la forma escalonada reducida)
+
+Sistema:
+  Ec.1:  x1 + x2 + x3 = 6
+  Ec.2:  2·x1 + 3·x2 + x3 = 14
+  Ec.3:  3·x1 + 4·x2 + 2·x3 = 20
+
+Matriz aumentada [A | b]:
+    [ 1 1 1 |  6 ]
+    [ 2 3 1 | 14 ]
+    [ 3 4 2 | 20 ]
+
+Reducción: cada pivote se lleva a 1 y se anulan los elementos de su columna (arriba y abajo).
+
+F2 ← F2 − 2·F1      [m = 2/1 = 2]
+    [ 1 1  1 |  6 ]
+    [ 0 1 -1 |  2 ]
+    [ 3 4  2 | 20 ]
+
+F3 ← F3 − 3·F1      [m = 3/1 = 3]
+    [ 1 1  1 | 6 ]
+    [ 0 1 -1 | 2 ]
+    [ 0 1 -1 | 2 ]
+
+F1 ← F1 − F2      [m = 1/1 = 1]
+    [ 1 0  2 | 4 ]
+    [ 0 1 -1 | 2 ]
+    [ 0 1 -1 | 2 ]
+
+F3 ← F3 − F2      [m = 1/1 = 1]
+    [ 1 0  2 | 4 ]
+    [ 0 1 -1 | 2 ]
+    [ 0 0  0 | 0 ]
+
+Columna 3: no hay pivote (todos los elementos disponibles son 0) → x3 quedará como variable libre.
+
+Matriz final:
+    [ 1 0  2 | 4 ]
+    [ 0 1 -1 | 2 ]
+    [ 0 0  0 | 0 ]
+
+ANÁLISIS: rango(A) = rango([A|b]) = 2 < 3 incógnitas → infinitas soluciones (1 grado(s) de libertad).
+
+Lectura de la forma reducida con parámetros
+
+   x3 = t1   (variable libre)
+   x2 = 2 + t1
+   x1 = 4 - 2·t1
+
+RESULTADO: solución general (t1, t2… ∈ ℝ)
+  x1 = 4 - 2·t1
+  x2 = 2 + t1
+  x3 = t1
+
+VERIFICACIÓN (sustitución en el sistema original):
+  Ec.1: al sustituir la solución general se obtiene 6   (b = 6)  ✓
+  Ec.2: al sustituir la solución general se obtiene 14   (b = 14)  ✓
+  Ec.3: al sustituir la solución general se obtiene 20   (b = 20)  ✓
+  ➜ La solución satisface todas las ecuaciones.
+
+INTERPRETACIÓN EN EL CONTEXTO DEL CASO
+La tercera ecuación es la suma de las dos primeras: sistema compatible indeterminado (det A = 0).
+
+  Existen infinitas combinaciones que satisfacen las restricciones; se necesita un criterio adicional
+  (costo mínimo, utilidad máxima, etc.) para elegir una.

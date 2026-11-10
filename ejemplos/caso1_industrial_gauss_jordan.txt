@@ -1,0 +1,84 @@
+MÉTODO DE GAUSS-JORDAN  (reducción a la forma escalonada reducida)
+
+Sistema:
+  Ec.1:  2·x1 + 3·x2 + 4·x3 = 140
+  Ec.2:  x1 + 2·x2 + x3 = 65
+  Ec.3:  3·x1 + x2 + 2·x3 = 80
+
+Matriz aumentada [A | b]:
+    [ 2 3 4 | 140 ]
+    [ 1 2 1 |  65 ]
+    [ 3 1 2 |  80 ]
+
+Reducción: cada pivote se lleva a 1 y se anulan los elementos de su columna (arriba y abajo).
+
+F1 ← F1 / 2      (pivote de la columna 1 → 1)
+    [ 1 3/2 2 | 70 ]
+    [ 1   2 1 | 65 ]
+    [ 3   1 2 | 80 ]
+
+F2 ← F2 − F1      [m = 1/1 = 1]
+    [ 1 3/2  2 | 70 ]
+    [ 0 1/2 -1 | -5 ]
+    [ 3   1  2 | 80 ]
+
+F3 ← F3 − 3·F1      [m = 3/1 = 3]
+    [ 1  3/2  2 |   70 ]
+    [ 0  1/2 -1 |   -5 ]
+    [ 0 -7/2 -4 | -130 ]
+
+F2 ← F2 / (1/2)      (pivote de la columna 2 → 1)
+    [ 1  3/2  2 |   70 ]
+    [ 0    1 -2 |  -10 ]
+    [ 0 -7/2 -4 | -130 ]
+
+F1 ← F1 − 3/2·F2      [m = (3/2)/1 = 3/2]
+    [ 1    0  5 |   85 ]
+    [ 0    1 -2 |  -10 ]
+    [ 0 -7/2 -4 | -130 ]
+
+F3 ← F3 + 7/2·F2      [m = (-7/2)/1 = -7/2]
+    [ 1 0   5 |   85 ]
+    [ 0 1  -2 |  -10 ]
+    [ 0 0 -11 | -165 ]
+
+F3 ← F3 / (-11)      (pivote de la columna 3 → 1)
+    [ 1 0  5 |  85 ]
+    [ 0 1 -2 | -10 ]
+    [ 0 0  1 |  15 ]
+
+F1 ← F1 − 5·F3      [m = 5/1 = 5]
+    [ 1 0  0 |  10 ]
+    [ 0 1 -2 | -10 ]
+    [ 0 0  1 |  15 ]
+
+F2 ← F2 + 2·F3      [m = (-2)/1 = -2]
+    [ 1 0 0 | 10 ]
+    [ 0 1 0 | 20 ]
+    [ 0 0 1 | 15 ]
+
+Matriz final:
+    [ 1 0 0 | 10 ]
+    [ 0 1 0 | 20 ]
+    [ 0 0 1 | 15 ]
+
+ANÁLISIS: la parte izquierda es la identidad → la solución se lee directamente de la última columna.
+
+RESULTADO: solución única
+  x1 = 10
+  x2 = 20
+  x3 = 15
+
+VERIFICACIÓN (sustitución en el sistema original):
+  Ec.1: 2·10 + 3·20 + 4·15 = 140   (b = 140)  ✓
+  Ec.2: 1·10 + 2·20 + 1·15 = 65   (b = 65)  ✓
+  Ec.3: 3·10 + 1·20 + 2·15 = 80   (b = 80)  ✓
+  ➜ La solución satisface todas las ecuaciones.
+
+INTERPRETACIÓN EN EL CONTEXTO DEL CASO
+Una planta fabrica sillas (x1), mesas (x2) y escritorios (x3). Cada unidad consume horas en tres estaciones: corte, ensamblaje y acabado. Se desea saber cuántas unidades producir para usar EXACTAMENTE las horas disponibles: 140 h de corte, 65 h de ensamblaje y 80 h de acabado.
+
+  • Sillas: 10 unidades
+  • Mesas: 20 unidades
+  • Escritorios: 15 unidades
+  ➜ Solución factible: todas las cantidades son no negativas.

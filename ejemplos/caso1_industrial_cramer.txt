@@ -1,0 +1,63 @@
+REGLA DE CRAMER   x_i = det(A_i) / det(A)
+
+donde A_i es la matriz A con la columna i reemplazada por el vector b.
+
+Sistema:
+  Ec.1:  2·x1 + 3·x2 + 4·x3 = 140
+  Ec.2:  x1 + 2·x2 + x3 = 65
+  Ec.3:  3·x1 + x2 + 2·x3 = 80
+
+Matriz de coeficientes A:
+    [ 2 3 4 ]
+    [ 1 2 1 ]
+    [ 3 1 2 ]
+
+Paso 1 · Cálculo de det(A)
+  Sarrus: 2·2·2 + 3·1·3 + 4·1·1 - 4·2·3 - 2·1·1 - 3·1·2
+       = 8 + 9 + 4 - 24 - 2 - 6 = -11
+  ➜ det(A) = -11
+
+Paso 2 · Determinantes de las matrices A_i y cociente
+
+A_1 (columna 1 reemplazada por b):
+    [ 140 3 4 ]
+    [  65 2 1 ]
+    [  80 1 2 ]
+  Sarrus: 140·2·2 + 3·1·80 + 4·65·1 - 4·2·80 - 140·1·1 - 3·65·2
+       = 560 + 240 + 260 - 640 - 140 - 390 = -110
+  x1 = det(A_1) / det(A) = -110 / -11 = 10
+
+A_2 (columna 2 reemplazada por b):
+    [ 2 140 4 ]
+    [ 1  65 1 ]
+    [ 3  80 2 ]
+  Sarrus: 2·65·2 + 140·1·3 + 4·1·80 - 4·65·3 - 2·1·80 - 140·1·2
+       = 260 + 420 + 320 - 780 - 160 - 280 = -220
+  x2 = det(A_2) / det(A) = -220 / -11 = 20
+
+A_3 (columna 3 reemplazada por b):
+    [ 2 3 140 ]
+    [ 1 2  65 ]
+    [ 3 1  80 ]
+  Sarrus: 2·2·80 + 3·65·3 + 140·1·1 - 140·2·3 - 2·65·1 - 3·1·80
+       = 320 + 585 + 140 - 840 - 130 - 240 = -165
+  x3 = det(A_3) / det(A) = -165 / -11 = 15
+
+RESULTADO: solución única
+  x1 = 10
+  x2 = 20
+  x3 = 15
+
+VERIFICACIÓN (sustitución en el sistema original):
+  Ec.1: 2·10 + 3·20 + 4·15 = 140   (b = 140)  ✓
+  Ec.2: 1·10 + 2·20 + 1·15 = 65   (b = 65)  ✓
+  Ec.3: 3·10 + 1·20 + 2·15 = 80   (b = 80)  ✓
+  ➜ La solución satisface todas las ecuaciones.
+
+INTERPRETACIÓN EN EL CONTEXTO DEL CASO
+Una planta fabrica sillas (x1), mesas (x2) y escritorios (x3). Cada unidad consume horas en tres estaciones: corte, ensamblaje y acabado. Se desea saber cuántas unidades producir para usar EXACTAMENTE las horas disponibles: 140 h de corte, 65 h de ensamblaje y 80 h de acabado.
+
+  • Sillas: 10 unidades
+  • Mesas: 20 unidades
+  • Escritorios: 15 unidades
+  ➜ Solución factible: todas las cantidades son no negativas.
